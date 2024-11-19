@@ -1,0 +1,37 @@
+elibrary_venv/
+
+# Python bytecode
+*.pyc
+*.pyo
+__pycache__/
+
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+
+# Windows
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Docker
+*.dockerignore
+.docker-compose.override.yml
+
+# pytest
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+*.hypothesis/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+curl command.txt
