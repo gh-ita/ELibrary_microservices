@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "login",
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,11 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+KEYCLOAK_CONFIG = {
+    "SERVER_URL": "http://localhost:8080/",
+    "REALM_NAME": "elibrary",
+    "CLIENT_ID": "lconfidential-client",
+    "CLIENT_SECRET": "wvljyggrLQdZXs80zVuhyYZP0HLYahj2",
+    "REDIRECT_URI": "http://localhost:8001/auth/callback/",
+}
