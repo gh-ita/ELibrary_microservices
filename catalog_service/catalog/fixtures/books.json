@@ -1,0 +1,32 @@
+[
+    {
+        "model": "catalog.book",
+        "pk": 1,
+        "fields": {
+            "title": "The Great Gatsby",
+            "author": "F. Scott Fitzgerald",
+            "description": "A novel set in the Jazz Age, chronicling the life of Jay Gatsby and his unrequited love for Daisy Buchanan.",
+            "status": "available"
+        }
+    },
+    {
+        "model": "catalog.book",
+        "pk": 2,
+        "fields": {
+            "title": "1984",
+            "author": "George Orwell",
+            "description": "A dystopian novel depicting a totalitarian society under the omnipresent surveillance of Big Brother.",
+            "status": "available"
+        }
+    },
+    {
+        "model": "catalog.book",
+        "pk": 3,
+        "fields": {
+            "title": "To Kill a Mockingbird",
+            "author": "Harper Lee",
+            "description": "A story of racial injustice and childhood innocence in the Deep South.",
+            "status": "available"
+        }
+    }
+]
