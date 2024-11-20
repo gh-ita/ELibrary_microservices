@@ -5,7 +5,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import BorrowedBook
 from django.contrib.auth.models import User
-from .serializers import BorrowedBookSerializer
 
 CATALOG_SERVICE_URL = "http://localhost:8002/catalog/books/"  # URL of your catalog service
 
