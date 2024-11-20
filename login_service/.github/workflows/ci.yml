@@ -1,0 +1,83 @@
+name: Django CI with Keycloak
+
+on:
+  push:
+    branches:
+        - ghita-branch
+  pull_request:
+    branches :
+        - main
+
+jobs:
+  django-keycloak:
+    name: Set up Keycloak and Run Django App
+    runs-on: ubuntu-latest
+
+    services:
+      keycloak:
+        image: quay.io/keycloak/keycloak:22.0.1
+        ports:
+          - 8080:8080
+        options: >-
+          --env KEYCLOAK_ADMIN=admin
+          --env KEYCLOAK_ADMIN_PASSWORD=admin
+          --env DB_VENDOR=h2
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Wait for Keycloak to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -s http://localhost:8080 > /dev/null; then
+              echo "Keycloak is ready!"
+              break
+            fi
+            echo "Waiting for Keycloak..."
+            sleep 5
+          done
+
+      - name: Configure Keycloak Realm
+        env:
+          KEYCLOAK_URL: http://localhost:8080
+          KEYCLOAK_ADMIN: admin
+          KEYCLOAK_ADMIN_PASSWORD: admin
+        run: |
+          # Log in and get an access token
+          TOKEN=$(curl -s -X POST "${KEYCLOAK_URL}/realms/master/protocol/openid-connect/token" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "username=${KEYCLOAK_ADMIN}" \
+            -d "password=${KEYCLOAK_ADMIN_PASSWORD}" \
+            -d 'grant_type=password' \
+            -d 'client_id=admin-cli' | jq -r '.access_token')
+
+          # Import your realm JSON configuration
+          curl -s -X POST "${KEYCLOAK_URL}/admin/realms" \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Content-Type: application/json" \
+            --data-binary keycloak/realm-config.json
+
+      # 6. Run Django migrations
+      - name : move to the login service project
+        run : cd login_service 
+
+      - name: Run migrations
+        run: |
+          python manage.py makemigrations
+          python manage.py migrate
+          
+
+      # 7. Run Django tests
+      - name: Run tests
+        run: python manage.py test login.tests

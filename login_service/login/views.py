@@ -16,7 +16,13 @@ class LoginView(APIView):
             )
 
         keycloak_helper = KeycloakHelper()
-        token_response = keycloak_helper.get_token(username, password)
+        try:
+            token_response = keycloak_helper.get_token(username, password)
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
         if "error" in token_response:
             return Response(
