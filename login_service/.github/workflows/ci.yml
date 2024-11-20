@@ -1,5 +1,4 @@
 name: Django CI with Keycloak
-
 on:
   push:
     branches:
